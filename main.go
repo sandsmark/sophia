@@ -8,8 +8,19 @@ import (
 	"fmt"
 	"io/ioutil"
 
+    // Connection stuff
 	"code.google.com/p/go.crypto/ssh/terminal"
 	"code.google.com/p/go.crypto/ssh"
+
+    // DB stuff
+    //"database/sql"
+    //_ "github.com/jbarham/gopgsqldriver"
+
+    // Interface stuff
+    //"github.com/nsf/termbox-go"
+
+    // Password storage
+    //"github.com/jameskeane/bcrypt"
 )
 
 func main() {
