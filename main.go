@@ -8,19 +8,19 @@ import (
 	"fmt"
 	"io/ioutil"
 
-    // Connection stuff
-	"code.google.com/p/go.crypto/ssh/terminal"
+	// Connection stuff
 	"code.google.com/p/go.crypto/ssh"
+	"code.google.com/p/go.crypto/ssh/terminal"
 
-    // DB stuff
-    //"database/sql"
-    //_ "github.com/jbarham/gopgsqldriver"
+	// DB stuff
+	//"database/sql"
+	//_ "github.com/jbarham/gopgsqldriver"
 
-    // Interface stuff
-    //"github.com/nsf/termbox-go"
+	// Interface stuff
+	//"github.com/nsf/termbox-go"
 
-    // Password storage
-    //"github.com/jameskeane/bcrypt"
+	// Password storage
+	//"github.com/jameskeane/bcrypt"
 )
 
 func main() {
@@ -46,14 +46,20 @@ func main() {
 	if err != nil {
 		panic("failed to listen for connection")
 	}
-	sConn, err := listener.Accept()
-	if err != nil {
-		panic("failed to accept incoming connection")
+	for {
+		sConn, err := listener.Accept()
+		if err != nil {
+			panic("failed to accept incoming connection")
+		}
+        go handleUser(sConn)
 	}
-	if err := sConn.Handshake(); err != nil {
-		panic("failed to handshake")
-	}
+}
 
+func handleUser(sConn *ssh.ServerConn) {
+    if err := sConn.Handshake(); err != nil {
+        fmt.Printf("failed to handshake\n")
+        return
+    }
 	// A ServerConn multiplexes several channels, which must 
 	// themselves be Accepted.
 	for {
@@ -64,7 +70,8 @@ func main() {
 		// to the channels.
 		channel, err := sConn.Accept()
 		if err != nil {
-			panic("error from Accept")
+			fmt.Printf("error from Accept\n")
+            return
 		}
 
 		// Channels have a type, depending on the application level
@@ -94,4 +101,3 @@ func main() {
 		}()
 	}
 }
-
